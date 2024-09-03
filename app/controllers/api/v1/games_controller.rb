@@ -11,7 +11,7 @@ module Api
       end
 
       def score
-        result = Games::Calculate.call(game:)
+        result = Games::Score.call(game:)
         render_command_result(result, status: :ok)
       end
 

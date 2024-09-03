@@ -1,10 +1,6 @@
 class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
-  def permitted_params
-    params.permit!.to_h
-  end
-
   def render_command_result(result, **options)
     case result
     in [:success, ApplicationRecord => record] then render json: record, status: :ok, **options
