@@ -1,20 +1,24 @@
 module Api
   module V1
-    class GamesController < Api::V1::BaseController
+    class GamesController < ApplicationController
       def create
-        game = Game.create!
-        render json: { game_id: game.id }, status: :created
+        result = Games::Create.call
+        render_command_result(result, status: :created)
       end
 
       def show
-        game = Game.find(params[:id])
-        render json: game, include: :frames
+        render json: game, include: :frames, status: :ok
       end
 
       def score
-        game = Game.find(params[:id])
-        score = CalculateScoreCommand.call(game)
-        render json: score
+        result = Games::Calculate.call(game:)
+        render_command_result(result, status: :ok)
+      end
+
+      private
+
+      def game
+        @game ||= Game.find(params[:id])
       end
     end
   end
