@@ -15,6 +15,7 @@ module Rolls
       return frame_result if frame_result.first == :failure
 
       roll = Roll.create!(roll_attributes.merge(frame: frame_result.last))
+      mark_frame_complete(frame_result.last) if frame_complete?(frame_result.last)
 
       [:success, roll]
     end
@@ -55,6 +56,14 @@ module Rolls
       else
         [:success, last_frame]
       end
+    end
+
+    def frame_complete?(frame)
+      frame.rolls.count == 2 || frame.rolls.sum(:pins) == 10
+    end
+
+    def mark_frame_complete(frame)
+      frame.update!(complete: true)
     end
   end
 end
